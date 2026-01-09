@@ -1,0 +1,17 @@
+{
+  "name": "midscene-ui-auto-tests",
+  "version": "1.0.0",
+  "description": "试试 Midscene 的 UI 自动化测试",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "FarceLi",
+  "license": "UNLICENSED",
+  "type": "commonjs",
+  "dependencies": {
+    "@midscene/android": "^1.1.0",
+    "@midscene/ios": "^1.1.0"
+  }
+}

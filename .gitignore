@@ -1,0 +1,33 @@
+# Dependencies
+/node_modules
+
+# Build output
+/dist
+/build
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Midscene run artifacts
+# This directory contains logs, reports, and cache from test runs
+/midscene_run/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE directories
+.idea/
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
