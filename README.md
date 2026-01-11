@@ -68,17 +68,161 @@ cp .env.example .env
 
 要运行 Android 用例，需要：
 - 安装 Android SDK / platform-tools（确保 `adb` 可用）
-- 连接 Android 真机或启动模拟器
+- 连接 Android 真机
 
-检查设备是否连接成功：
+本项目在 `common/runtime.ts` 中会读取已连接设备列表，并默认使用第一个设备；若没有设备会报错：`未连接安卓设备`。
+
+#### 2.1) 安装 Android SDK / platform-tools
+
+**步骤 1：下载 Android SDK Command Line Tools**
+
+> **目的**：Android SDK 提供了 `adb`（Android Debug Bridge）工具，这是连接和管理 Android 设备的命令行工具，Midscene 依赖它来与 Android 设备通信。
+
+**方式 A：通过 Android Studio 安装（推荐）**
+
+1. 下载并安装 [Android Studio](https://developer.android.com/studio)
+2. 打开 Android Studio，进入 **More Actions > SDK Manager**
+3. 在 **SDK Tools** 标签页中，勾选 **Android SDK Platform-Tools**
+4. 点击 **Apply** 完成安装
+
+**方式 B：独立安装 platform-tools**
+
+1. 访问 [Android 开发者官网](https://developer.android.com/tools/releases/platform-tools)
+2. 下载对应操作系统的 platform-tools 压缩包
+3. 解压到任意目录（例如：`~/android/platform-tools`）
+
+**步骤 2：配置环境变量**
+
+> **目的**：将 `adb` 添加到系统 PATH 中，使终端可以在任何目录下直接执行 `adb` 命令，无需输入完整路径。
+
+**macOS / Linux：**
+
+1. 找到 platform-tools 的安装路径：
+   - Android Studio：通常在 `~/Library/Android/sdk/platform-tools`（macOS）或 `~/Android/Sdk/platform-tools`（Linux）
+   - 独立安装：你解压的目录路径
+
+2. 编辑 shell 配置文件（根据你使用的 shell 选择）：
+   - **zsh**（macOS 默认）：`~/.zshrc`
+   - **bash**：`~/.bashrc` 或 `~/.bash_profile`
+
+3. 添加以下内容（替换为你的实际路径）：
+
+```bash
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+```
+
+4. 重新加载配置：
+
+```bash
+# zsh
+source ~/.zshrc
+
+# bash
+source ~/.bashrc
+```
+
+**Windows：**
+
+1. 右键 **此电脑** > **属性** > **高级系统设置** > **环境变量**
+2. 在 **系统变量** 中，找到 **Path**，点击 **编辑**
+3. 点击 **新建**，添加 platform-tools 的完整路径（例如：`C:\Users\YourName\AppData\Local\Android\Sdk\platform-tools`）
+4. 点击 **确定** 保存
+
+**步骤 3：验证 adb 安装**
+
+> **目的**：确认 `adb` 已正确安装并添加到 PATH，可以正常使用。
+
+在终端执行：
+
+```bash
+adb version
+```
+
+应显示 adb 的版本信息（例如：`Android Debug Bridge version 1.0.41`）。
+
+如果提示 `command not found`，请检查：
+- platform-tools 是否正确安装
+- 环境变量是否配置正确
+- 是否重新加载了 shell 配置
+
+#### 2.2) 准备 Android 设备
+
+**步骤 1：启用开发者选项**
+
+> **目的**：Android 系统默认隐藏开发者选项，需要手动启用才能进行 USB 调试和开发操作。
+
+1. 在 Android 手机上进入 **设置**
+2. 找到 **关于手机**（或 **关于设备**）
+3. 连续点击 **版本号**（或 **内部版本号**）7 次
+4. 系统会提示"您已成为开发者"（或类似提示）
+
+**步骤 2：启用 USB 调试**
+
+> **目的**：USB 调试允许计算机通过 USB 连接控制 Android 设备，这是 `adb` 连接设备的前提条件。
+
+1. 返回 **设置**，找到 **系统** > **开发者选项**（或直接在设置中搜索"开发者选项"）
+2. 开启 **USB 调试**（或 **开发者选项**）
+3. 如果出现安全提示，选择 **确定** 或 **允许**
+
+**步骤 3：连接手机到电脑**
+
+> **目的**：建立物理连接后，`adb` 才能识别设备并进行通信。
+
+1. 使用 USB 数据线连接 Android 手机到电脑
+2. 在手机上会弹出 **"允许 USB 调试吗？"** 的对话框
+3. 勾选 **"始终允许使用这台计算机进行调试"**（可选，避免每次连接都弹出）
+4. 点击 **确定** 或 **允许**
+
+**步骤 4：验证设备连接**
+
+> **目的**：确认设备已被 `adb` 正确识别，状态为 `device` 表示已授权并可以正常通信。
+
+在终端执行：
 
 ```bash
 adb devices
 ```
 
-至少需要看到 1 台设备且状态为 `device`。
+应看到类似输出：
 
-> `common/runtime.ts` 中会读取已连接设备列表，并默认使用第一个设备；若没有设备会报错：`未连接安卓设备`。
+```
+List of devices attached
+ABC123XYZ    device
+```
+
+- `ABC123XYZ` 是设备的序列号
+- `device` 表示设备已连接且已授权（可以正常使用）
+- 如果显示 `unauthorized`，需要在手机上重新授权 USB 调试
+- 如果没有任何输出，检查 USB 连接和驱动
+
+#### 2.3) 常见问题排查
+
+**问题 1：adb devices 显示 "unauthorized"**
+
+- 在手机上撤销 USB 调试授权：**设置 > 开发者选项 > 撤销 USB 调试授权**
+- 重新连接手机，重新授权
+- 检查手机是否锁屏，某些手机需要解锁才能授权
+
+**问题 2：adb devices 没有显示设备**
+
+- 检查 USB 连接是否正常（尝试更换 USB 线或 USB 端口）
+- 检查手机是否已启用 USB 调试
+- 尝试重启 adb 服务：
+
+```bash
+adb kill-server
+adb start-server
+adb devices
+```
+
+- Windows 用户可能需要安装手机驱动（通常手机会自动安装，或访问手机厂商官网下载）
+
+**问题 3：adb command not found**
+
+- 确认 platform-tools 已正确安装
+- 检查环境变量配置是否正确
+- 重新加载 shell 配置：`source ~/.zshrc`（或对应的配置文件）
 
 
 ### 3) iOS 准备
@@ -365,13 +509,7 @@ export const APP_LAUNCH_CONFIG = {
 
 ## 如何运行
 
-### 当前情况（重要）
-
-当前 `package.json` 里 **没有** 配置可直接运行的 `scripts`，因此你需要通过 TS 运行器启动（例如 `tsx` 或 `ts-node`）。
-
-推荐使用 `tsx`（更轻量、体验更好）。
-
-### 方式 A：使用 tsx（推荐）
+### 运行命令
 
 ```bash
 npx tsx runners/android.single.ts
@@ -381,15 +519,6 @@ npx tsx runners/batch.ts
 
 如果你本机没有 `tsx`，`npx` 会自动临时下载运行（可能受网络/镜像影响）。
 
-### 方式 B：使用 ts-node
-
-```bash
-npx ts-node runners/android.single.ts
-npx ts-node runners/ios.single.ts
-```
-
-> 如果执行报错提示缺少 `typescript/ts-node`，请在项目中补充 devDependencies（见下方“建议完善”）。
-
 ---
 
 ## 运行产物
@@ -397,7 +526,6 @@ npx ts-node runners/ios.single.ts
 运行日志/报告会输出到：
 - `midscene_run/`
 
-该目录已在 `.gitignore` 中忽略，不会提交到 Git。
 
 ---
 
@@ -431,8 +559,4 @@ adb start-server
    - `tsx`（推荐）或 `ts-node`
 
 ---
-
-## License
-
-UNLICENSED
 
