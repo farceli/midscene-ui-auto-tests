@@ -13,11 +13,9 @@ export interface AppLaunchConfig {
 
 export const APP_LAUNCH_CONFIG: Record<Platform, AppLaunchConfig> = {
   android: {
-    // Mercedes me (CN) Android 包名
     appId: 'com.daimler.ris.mercedesme.cn.android',
   },
   ios: {
-    // TODO: 替换为真实的 iOS Bundle Identifier
     appId: 'com.daimler.ris.mercedesme.cn.ios',
   },
 };
