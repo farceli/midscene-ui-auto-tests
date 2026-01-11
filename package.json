@@ -13,5 +13,8 @@
   "dependencies": {
     "@midscene/android": "^1.1.0",
     "@midscene/ios": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0"
   }
 }

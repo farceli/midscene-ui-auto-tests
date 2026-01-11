@@ -7,6 +7,10 @@
  * - 尽量保持依赖最小：只要求 agent 具备 aiScroll / aiAssert
  */
 
+import createLogger from './logger';
+
+const log = createLogger('scroll');
+
 export type ScrollDirection = 'down' | 'up' | 'left' | 'right';
 
 export interface ScrollOnlyParams {
@@ -40,11 +44,6 @@ export interface ScrollOnlyParams {
    */
   precheckStopCondition?: boolean;
 
-  /**
-   * 日志开关（默认 false）。
-   * 说明：开启后会在控制台输出滚动过程的调试信息。
-   */
-  debug?: boolean;
 }
 
 /**
@@ -95,14 +94,11 @@ export async function scrollOnly(agent: ScrollOnlyAgentLike, params: ScrollOnlyP
     maxScrolls = 30,
     stopWhenSee,
     precheckStopCondition = false,
-    debug = false,
   } = params;
 
-  const log = (...args: unknown[]) => {
-    if (debug) console.log('[scrollOnly]', ...args);
-  };
 
-  log('开始执行', {
+
+  log.debug('开始执行', {
     direction,
     scrollOn,
     distance,
@@ -115,28 +111,28 @@ export async function scrollOnly(agent: ScrollOnlyAgentLike, params: ScrollOnlyP
   if (precheckStopCondition && stopWhenSee) {
     const ok = await tryAssert(agent, stopWhenSee);
     if (ok) {
-      log('首屏已满足停止条件，不执行滚动。');
+      log.debug('首屏已满足停止条件，不执行滚动。');
       return;
     }
-    log('首屏未满足停止条件，准备开始滚动。');
+    log.debug('首屏未满足停止条件，准备开始滚动。');
   }
 
   // 1) 循环滚动 + 可选停止判断
   for (let i = 0; i < maxScrolls; i++) {
-    log(`滚动 ${i + 1}/${maxScrolls} 次...`);
+    log.debug(`滚动 ${i + 1}/${maxScrolls} 次...`);
 
     await agent.aiScroll({ scrollType: 'singleAction', direction, distance }, scrollOn);
 
     if (stopWhenSee) {
       const ok = await tryAssert(agent, stopWhenSee);
       if (ok) {
-        log(`第 ${i + 1} 次滚动后满足停止条件，停止滚动。`);
+        log.debug(`第 ${i + 1} 次滚动后满足停止条件，停止滚动。`);
         return;
       }
-      log(`第 ${i + 1} 次滚动后未满足停止条件，继续滚动。`);
+      log.debug(`第 ${i + 1} 次滚动后未满足停止条件，继续滚动。`);
     }
   }
 
-  log('达到最大滚动次数，停止。');
+  log.debug('达到最大滚动次数，停止。');
 }
 
