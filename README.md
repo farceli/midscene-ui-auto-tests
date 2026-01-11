@@ -18,7 +18,6 @@
 │  ├─ app-config.ts        # App 启动配置（包名/bundleId）
 │  ├─ runtime.ts           # Midscene runtime：创建 device + agent
 │  ├─ scroll.ts            # 滚动相关封装
-│  ├─ scroll-query.ts
 │  └─ sleep.ts
 ├─ runners/                # 运行入口
 │  ├─ android.single.ts

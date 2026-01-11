@@ -42,7 +42,7 @@ export interface ScrollOnlyParams {
 
   /**
    * 日志开关（默认 false）。
-   * 说明：scroll-query.ts 里有日志方便调试，这里默认更“安静”。
+   * 说明：开启后会在控制台输出滚动过程的调试信息。
    */
   debug?: boolean;
 }

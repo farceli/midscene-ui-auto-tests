@@ -4,7 +4,6 @@
 
 import { createRuntime } from '../../common/runtime';
 import { getAppLaunchConfig } from '../../common/app-config';
-import { scrollCollect } from '../../common/scroll-query';
 import { scrollOnly } from '../../common/scroll';
 
 // 商店-看车页 Smoke Test
