@@ -548,15 +548,3 @@ adb start-server
 
 ---
 
-## 建议完善（让新环境更容易跑起来）
-
-建议补充：
-1. `.env.example`：提供必要环境变量名称（不提交真实密钥）
-2. `package.json` scripts：
-   - `test:android` / `test:ios` / `test:batch`
-3. `devDependencies`（如你希望开箱即用地运行 TS）：
-   - `typescript`
-   - `tsx`（推荐）或 `ts-node`
-
----
-
