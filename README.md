@@ -2,7 +2,7 @@
 
 基于 **Midscene** 的移动端（**Android / iOS**）UI 自动化测试项目（TypeScript）。
 
-> 说明：本仓库不是“拉下来就能纯本地跑”的那种项目。UI 自动化测试需要真实设备/模拟器 + 平台工具链（Android 的 adb / iOS 的 WDA/Xcode）以及 Midscene 所需的模型/环境变量配置。
+> 说明：本仓库不是“拉下来就能纯本地跑”的项目。UI 自动化测试需要真实设备/模拟器 + 平台工具链（Android 的 adb / iOS 的 WDA/Xcode）以及 Midscene 所需的模型/环境变量配置。
 
 ---
 
@@ -50,9 +50,18 @@ npm ci
 
 Midscene 在执行 `aiAct / aiQuery` 时通常需要模型服务配置（例如 API Key、Base URL 等）。
 
-本仓库的 `.gitignore` 已忽略 `.env`，因此**新环境拉取后你需要自行准备 `.env`（或在系统环境变量中配置）**。
+本仓库的 `.gitignore` 已忽略 `.env`，因此**新环境拉取后你需要自行准备 `.env`**。
 
-> 你可以在本仓库自行补充一个 `.env.example`（仅提供变量名，不提交密钥），以便其他同学开箱。
+**配置步骤**：
+
+1. 复制 `.env.example` 文件为 `.env`：
+
+```bash
+cp .env.example .env
+```
+
+2. 编辑 `.env` 文件，填入你的实际配置值（API Key、Base URL 等）
+
 
 
 ### 2) Android 准备
