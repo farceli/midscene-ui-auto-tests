@@ -1,123 +1,70 @@
 # midscene-ui-auto-tests
 
-基于 **Midscene** 的移动端（**Android / iOS**）UI 自动化测试项目（TypeScript）。
+基于 **Midscene** 的移动端（Android / iOS）UI 自动化测试（TypeScript）。
 
-> 说明：本仓库不是“拉下来就能纯本地跑”的项目。UI 自动化测试需要真实设备/模拟器 + 平台工具链（Android 的 adb / iOS 的 WDA/Xcode）以及 Midscene 所需的模型/环境变量配置。
+## 快速开始
 
----
+### 环境
 
-## Todo
+- Node.js `>= 18`
+- Android：`adb` 可用 + 已连接设备
+- iOS：macOS + WDA 可用（默认 `localhost:8100`）
 
-1. 运行前检查设备状态
-2. Fixture
-3. 多设备选择
-4. 完善注释
-5. 优化项目结构
-6. 强制结束如何释放设备？
-7. 运行时 midscene 自带的日志如何处理？
-8. 代码质量检测
+安装依赖：
 
----
+```bash
+npm ci
+```
+
+### 必填环境变量
+
+本仓库需要你自行准备 `.env`（或在 CI 配置环境变量）。
+
+```bash
+cp .env.example .env
+```
+
+```env
+# Android 包名（packageName）
+APP_ID_ANDROID=com.xxx.yyy
+
+# iOS BundleId
+APP_ID_IOS=com.xxx.yyy
+
+# 日志级别：silent|error|warn|info|debug
+LOG_LEVEL=info
+```
+
+## 如何运行
+
+```bash
+npx tsx run/android.single.ts
+npx tsx run/ios.single.ts
+npx tsx run/batch.ts
+```
+
+## 运行产物
+
+- `midscene_run/`
 
 ## 项目结构
 
 ```text
 .
 ├─ cases/                  # 测试用例
-│  └─ store/
-│     └─ vehicle/
-│        └─ vehicle-type-jump.ts
 ├─ common/                 # 业务通用能力
-│  ├─ discovery/
-│  ├─ profile/
-│  ├─ service/
-│  ├─ store/
-│  │  └─ index.ts
-│  ├─ vehicle/
-│  └─ launch-app.ts
 ├─ run/                    # 运行入口
-│  ├─ android.single.ts
-│  ├─ ios.single.ts
-│  └─ batch.ts
 ├─ util/                   # 基础通用能力
-│  ├─ app-config.ts        # App 启动配置（包名/bundleId）
-│  ├─ logger.ts            # 日志封装
-│  ├─ runtime.ts           # Midscene runtime：创建 device + agent
-│  └─ scroll.ts            # 滚动相关封装
 ├─ package.json
 ├─ package-lock.json
 └─ tsconfig.json
 ```
 
----
+## Troubleshooting
 
-## 日志配置
+- Android：`adb devices` 确认设备已连接
+- iOS：确认 WDA 可访问 `http://localhost:8100/status`
 
-本项目使用统一的 logger 输出日志，日志级别通过 `.env` 或系统环境变量 `LOG_LEVEL` 控制。
-
-支持的级别：
-- `silent`：不输出日志
-- `error`：仅输出错误
-- `warn`：输出警告和错误
-- `info`：输出关键步骤日志（默认）
-- `debug`：输出所有调试日志（包含滚动等细节）
-
-示例：在 `.env` 中配置
-
-```env
-LOG_LEVEL=debug
-```
-
----
-
-## 环境要求
-
-### Node.js
-- 建议 Node.js：**>= 18**
-- 包管理器：npm
-
-安装依赖：
-
-```bash
-npm ci
-# 或：npm install
-```
-
----
-
-## 运行前准备（关键）
-
-### 1) Midscene / AI 配置
-
-Midscene 在执行 `aiAct / aiQuery` 时通常需要模型服务配置（例如 API Key、Base URL 等）。
-
-本仓库的 `.gitignore` 已忽略 `.env`，因此**新环境拉取后你需要自行准备 `.env`**。
-
-**配置步骤**：
-
-1. 复制 `.env.example` 文件为 `.env`：
-
-```bash
-cp .env.example .env
-```
-
-2. 编辑 `.env` 文件，填入你的实际配置值（API Key、Base URL 等）
-
-
-
-### 2) Android 准备
-
-要运行 Android 用例，需要：
-- 安装 Android SDK / platform-tools（确保 `adb` 可用）
-- 连接 Android 真机
-
-本项目在 `common/runtime.ts` 中会读取已连接设备列表，并默认使用第一个设备；若没有设备会报错：`未连接安卓设备`。
-
-#### 2.1) 安装 Android SDK / platform-tools
-
-**步骤 1：下载 Android SDK Command Line Tools**
-
-> **目的**：Android SDK 提供了 `adb`（Android Debug Bridge）工具，这是连接和管理 Android 设备的命令行工具，Midscene 依赖它来与 Android 设备通信。
 
 **方式 A：通过 Android Studio 安装（推荐）**
 
@@ -237,37 +184,8 @@ ABC123XYZ    device
 - 如果显示 `unauthorized`，需要在手机上重新授权 USB 调试
 - 如果没有任何输出，检查 USB 连接和驱动
 
-#### 2.3) 常见问题排查
-
-**问题 1：adb devices 显示 "unauthorized"**
-
-- 在手机上撤销 USB 调试授权：**设置 > 开发者选项 > 撤销 USB 调试授权**
-- 重新连接手机，重新授权
-- 检查手机是否锁屏，某些手机需要解锁才能授权
-
-**问题 2：adb devices 没有显示设备**
-
-- 检查 USB 连接是否正常（尝试更换 USB 线或 USB 端口）
-- 检查手机是否已启用 USB 调试
-- 尝试重启 adb 服务：
-
-```bash
-adb kill-server
-adb start-server
-adb devices
-```
-
-- Windows 用户可能需要安装手机驱动（通常手机会自动安装，或访问手机厂商官网下载）
-
-**问题 3：adb command not found**
-
-- 确认 platform-tools 已正确安装
-- 检查环境变量配置是否正确
-- 重新加载 shell 配置：`source ~/.zshrc`（或对应的配置文件）
-
 
 ### 3) iOS 准备
-
 要运行 iOS 用例，需要：
 - macOS + Xcode（含命令行工具）
 - iOS 真机
@@ -475,56 +393,9 @@ http://localhost:8100/status
 2. 如果返回 JSON 格式的状态信息（与 iPhone 上访问的结果一致），说明端口转发成功，Mac 已可以正常访问 WDA 服务
 
 3. 此时 Midscene 可以通过 `http://localhost:8100` 连接 WDA 进行自动化测试
-
-#### 3.5) 常见问题排查
-
-**问题 1：什么是 Homebrew？如何安装？**
-
-> **目的**：Homebrew 是 macOS 的包管理器，用于安装命令行工具和软件包。安装 `iproxy` 需要先安装 Homebrew。
-
-**Homebrew 简介**：
-- Homebrew 是 macOS 上最流行的包管理器，类似于 Linux 的 `apt` 或 `yum`
-- 通过 Homebrew 可以方便地安装各种开发工具和命令行程序
-- 本项目中需要使用 Homebrew 安装 `ios-webkit-debug-proxy`（包含 `iproxy` 工具）
-
-**安装 Homebrew**：
-
-1. 打开终端，访问 [Homebrew 官网](https://brew.sh/) 获取最新安装命令
-2. 安装过程中会提示输入 Mac 密码，按提示完成安装
-3. 安装完成后，验证是否安装成功：
-
-```bash
-brew --version
-```
-
-
-**问题 2：Xcode 构建失败 - "Code Signing Error"**
-
-- 确保已在 Xcode 中配置了正确的签名（见 3.3 步骤 3）
-- 确保 Apple ID 已登录且团队可用
-- 对于真机，确保设备已在 Xcode 中信任
-
-**问题 3：真机无法安装 WDA - "Untrusted Developer"**
-
-1. 在 iPhone 上进入 **设置 > 通用 > VPN 与设备管理**（或 **描述文件与设备管理**）
-2. 找到你的开发者证书，点击并选择 **信任**
-
-**问题 4：WDA 启动后立即崩溃**
-
-- 检查设备系统版本是否与 WDA 兼容
-- 查看 Xcode 控制台的错误日志
-- 尝试重新构建项目：`Product > Clean Build Folder`（`Cmd + Shift + K`），然后重新构建
-
-**问题 5：无法通过 localhost:8100 访问 WDA**
-
-- 真机：WDA 运行在设备上，需要通过 `iproxy` 转发端口（见 3.4 步骤 4）
-- 检查防火墙设置
-- 确认 Xcode 控制台显示 **"Automatically"**，表示 WDA 已成功启动
-- 确认 `iproxy` 正在运行（终端窗口保持打开状态）
-
 ---
 
-## App 启动配置（必填 env）
+
 
 跨平台 App 启动配置在：
 - `common/app-config.ts`
@@ -565,33 +436,3 @@ npx tsx runners/batch.ts
 ```
 
 如果你本机没有 `tsx`，`npx` 会自动临时下载运行（可能受网络/镜像影响）。
-
----
-
-## 运行产物
-
-运行日志/报告会输出到：
-- `midscene_run/`
-
-
----
-
-## 常见问题（Troubleshooting）
-
-### Android：报错“未连接安卓设备”
-- 执行 `adb devices` 看是否识别到设备
-- 检查手机是否弹出授权窗口并点击允许
-- 重启 adb：
-
-```bash
-adb kill-server
-adb start-server
-```
-
-### iOS：无法连接 WDA（localhost:8100）
-- 确认 WDA 正在运行且端口可访问
-- 确认端口 8100 未被占用
-- 真机需要正确的开发者签名/信任设置（取决于你的 WDA 部署方式）
-
----
-
