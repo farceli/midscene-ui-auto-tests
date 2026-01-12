@@ -1,22 +1,10 @@
 /**
- * App 配置（跨平台）
- *
- * 目标：把用例里的 App 包名（Android PackageName）/ iOS BundleId 从代码中抽离出来，统一由环境变量提供。
- *
- * 使用方式：
- * - 通过 `getAppLaunchConfig(platform)` 获取当前平台的启动参数（目前仅包含 `appId`）
- * - 在 runner / case 中只关心 `platform`，不要在业务代码里硬编码 appId
- *
- * 必填环境变量：
+ * App 启动配置：从环境变量读取 appId。
  * - Android: `APP_ID_ANDROID`
  * - iOS: `APP_ID_IOS`
- *
- * 注意事项：
- * - 如果未配置对应环境变量，会直接抛错（便于尽早发现配置问题）
- * - 建议在本地通过 `.env` 管理，在 CI 里通过 secret / env 注入
+ * 未配置则抛错。
  */
 
-/** 运行平台类型 */
 export type Platform = 'android' | 'ios';
 
 const getEnvKeyByPlatform = (platform: Platform) =>
@@ -32,11 +20,7 @@ const getRequiredAppIdFromEnv = (platform: Platform): string => {
   return appId;
 };
 
-/**
- * 获取指定平台的启动配置。
- *
- * 规则：appId 必须来自环境变量；未配置则抛错。
- */
+/** 获取指定平台的启动配置（未配置 env 则抛错） */
 export function getAppLaunchConfig(platform: Platform): { appId: string } {
   return { appId: getRequiredAppIdFromEnv(platform) };
 }

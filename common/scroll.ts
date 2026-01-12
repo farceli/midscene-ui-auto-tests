@@ -1,10 +1,7 @@
 /**
- * 更通用的滚动工具：只负责“按要求滚动”，不返回页面内容。
+ * 通用滚动工具：只负责滚动动作 + 可选停止判断，不采集页面内容。
  *
- * 设计目标：
- * - 不绑定任何业务场景（不做 query/collect）
- * - 只做滚动动作 + 可选的结束检测
- * - 尽量保持依赖最小：只要求 agent 具备 aiScroll / aiAssert
+ * 依赖最小能力：agent 需要实现 `aiScroll`、`aiAssert`。
  */
 
 import createLogger from './logger';
@@ -17,34 +14,22 @@ export interface ScrollOnlyParams {
   /** 滚动方向（singleAction） */
   direction: ScrollDirection;
 
-  /** 在什么区域滚动（传给 aiScroll 的 locate） */
+  /** 滚动区域（传给 `aiScroll` 的 locate） */
   scrollOn: string;
 
-  /** 每次滚动距离（像素），默认 200；也可传 null 交给 Midscene 决定 */
+  /** 每次滚动距离（像素），默认 200；传 `null` 表示交给 Midscene 决定 */
   distance?: number | null;
 
   /** 最大滚动次数，默认 30 */
   maxScrolls?: number;
 
-  /**
-   * 什么时候停止滚动（自然语言描述）。
-   * - 例如："页面底部出现了“没有更多了”"
-   * - 例如："看到了“加载完成”"
-   *
-   * 说明：
-   * - 若提供该字段，则每次滚动后都会尝试 aiAssert
-   * - aiAssert 成功 => 认为满足停止条件
-   */
+  /** 停止条件（自然语言）。每次滚动后会用 `aiAssert` 尝试判断是否已满足。 */
   stopWhenSee?: string;
 
-  /**
-   * 是否在开始前先检查一次 stopWhenSee（默认 false）。
-   * - true：如果首屏就满足停止条件，直接不滚动
-   * - false：至少滚动一次后再开始判断
-   */
+  /** 是否在开始前先检查一次停止条件；true 表示首屏满足则不滚动。 */
   precheckStopCondition?: boolean;
-
 }
+
 
 /**
  * 最小 agent 能力依赖（避免引入具体平台类型）。
@@ -64,6 +49,11 @@ export interface ScrollOnlyAgentLike {
   aiAssert(prompt: string): Promise<unknown>;
 }
 
+/**
+ * 尝试断言停止条件。
+ * - 成功：返回 true
+ * - 失败：返回 false（吞掉异常，便于作为循环中的探测逻辑）
+ */
 async function tryAssert(agent: ScrollOnlyAgentLike, prompt?: string): Promise<boolean> {
   if (!prompt) return false;
   try {
@@ -76,15 +66,8 @@ async function tryAssert(agent: ScrollOnlyAgentLike, prompt?: string): Promise<b
 
 /**
  * 只滚动，不采集内容。
- * 参数说明：
- * - direction：滚动方向
- * - scrollOn：在什么区域滚动
- * - distance：每次滚动距离（像素），默认 200；也可传 null 交给 Midscene 决定
- * - maxScrolls：最大滚动次数，默认 30
- * - stopWhenSee：什么时候停止滚动（自然语言描述）
- * - precheckStopCondition：是否在开始前先检查一次 stopWhenSee（默认 false）
- * - debug：日志开关（默认 false）
- * 返回：void
+ * - 如果设置 `stopWhenSee`：每次滚动后都会尝试断言，满足则提前结束
+ * - 如果设置 `precheckStopCondition`：先检查首屏是否满足停止条件
  */
 export async function scrollOnly(agent: ScrollOnlyAgentLike, params: ScrollOnlyParams): Promise<void> {
   const {
@@ -95,8 +78,6 @@ export async function scrollOnly(agent: ScrollOnlyAgentLike, params: ScrollOnlyP
     stopWhenSee,
     precheckStopCondition = false,
   } = params;
-
-
 
   log.debug('开始执行', {
     direction,
