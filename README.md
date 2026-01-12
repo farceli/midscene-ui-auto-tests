@@ -515,7 +515,7 @@ brew --version
 
 ---
 
-## App 启动配置
+## App 启动配置（必填 env）
 
 跨平台 App 启动配置在：
 - `common/app-config.ts`
@@ -524,18 +524,24 @@ brew --version
 - Android：使用 `packageName`（这里统一叫 `appId`）
 - iOS：使用 `bundleId`（这里统一叫 `appId`）
 
-你需要按实际被测 App 修改：
+本项目**不提供默认值**：启动 App 所需的 `appId` 必须从环境变量读取；如果未配置会直接报错。
 
-```ts
-export const APP_LAUNCH_CONFIG = {
-  android: {
-    appId: 'com.xxx.yyy',
-  },
-  ios: {
-    appId: 'com.xxx.yyy',
-  },
-};
+### 需要配置的环境变量
+
+在 `.env`（或 CI 环境变量）中配置：
+
+```env
+# Android 包名（packageName）
+APP_ID_ANDROID=com.xxx.yyy
+
+# iOS BundleId
+APP_ID_IOS=com.xxx.yyy
 ```
+
+### 行为说明
+
+- 优先读取运行时环境变量（`process.env`）
+- 若对应平台的环境变量缺失或为空字符串，会抛错：提示缺少 `APP_ID_ANDROID` / `APP_ID_IOS`
 
 ---
 
