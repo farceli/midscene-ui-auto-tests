@@ -46,7 +46,7 @@ export interface ScrollOnlyAgentLike {
   ): Promise<void>;
 
   /** 用于判断“是否满足停止条件” */
-  aiAssert(prompt: string): Promise<unknown>;
+  aiAssert?: (prompt: string) => Promise<unknown>;
 }
 
 /**
@@ -56,6 +56,7 @@ export interface ScrollOnlyAgentLike {
  */
 async function tryAssert(agent: ScrollOnlyAgentLike, prompt?: string): Promise<boolean> {
   if (!prompt) return false;
+  if (!agent.aiAssert) return false;
   try {
     await agent.aiAssert(prompt);
     return true;

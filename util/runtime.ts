@@ -16,7 +16,7 @@ import { IOSDevice, IOSAgent } from '@midscene/ios';
  *
  * @throws Android 平台在未连接设备时抛错：`未连接安卓设备`
  */
-export async function createRuntime(platform: 'android' | 'ios') {
+export async function createRuntime(platform: 'android' | 'ios'): Promise<{ platform: 'android' | 'ios'; device: any; agent: any }> {
   if (platform === 'android') {
     const devices = await getConnectedDevices();
     if (!devices.length) {

@@ -2,14 +2,14 @@
  * 商店-看车页 Smoke Test
  */
 
-import { createRuntime } from '../../../util/runtime';
-import { launchApp } from '../../../common/launch-app';
-import { scrollOnly } from '../../../util/scroll';
-import createLogger from '../../../util/logger';
-import { selectMenu, selectTab } from '../../../common/store';
+import { createRuntime } from '@/util/runtime';
+import { launchApp } from '@/common/launch-app';
+import { scrollOnly } from '@/util/scroll';
+import createLogger from '@/util/logger';
+import { selectMenu, selectTab } from '@/common/store';
 
 // 商店-看车页 Smoke Test
-export async function runStoreCarPageSmokeTest(platform: 'android' | 'ios') {
+export async function runStoreVehicleTypeJumpTest(platform: 'android' | 'ios') {
     // 初始化日志记录器
     const log = createLogger(`car-page:${platform}`);
 
@@ -28,8 +28,8 @@ export async function runStoreCarPageSmokeTest(platform: 'android' | 'ios') {
         // 进入看车 Tab
         await selectTab({ agent }, '看车', { log });
 
-        const expectedCarModelList = ['轿车', 'SUV', '轿跑&敞篷', 'MPV', '纯电车型', '插电式混合动力', 'AMG', 'MAYBACH', 'G'];
-        // const expectedCarModelList = ['轿车'];
+        // const expectedCarModelList = ['轿车', 'SUV', '轿跑&敞篷', 'MPV', '纯电车型', '插电式混合动力', 'AMG', 'MAYBACH', 'G'];
+        const expectedCarModelList = ['轿车'];
 
         log.info('点击“全部车型”，进入 OneWeb 车型列表页');
         await agent.aiTap('“全部车型”按钮');

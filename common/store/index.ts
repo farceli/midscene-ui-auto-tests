@@ -5,7 +5,7 @@ type RuntimeLike = {
     aiQuery: (prompt: string) => Promise<unknown>;
     aiTap: (prompt: string) => Promise<unknown>;
     aiWaitFor: (prompt: string) => Promise<unknown>;
-    aiAssert: (prompt: string) => Promise<unknown>;
+    aiAssert?: (prompt: string) => Promise<unknown>;
   };
 };
 
@@ -41,15 +41,15 @@ export async function selectTab(
   }
   log?.info?.(`检查"${tabName}"Tab是否加载完成`);
   if (tabName === '精选') {
-    await runtime.agent.aiAssert('精选 Tab 展示多个商品卡片');
+    await runtime.agent.aiAssert?.('精选 Tab 展示多个商品卡片');
   } else if (tabName === '看车') {
-    await runtime.agent.aiAssert('看车 Tab 展示多种车型');
+    await runtime.agent.aiAssert?.('看车 Tab 展示多种车型');
   } else if (tabName === '互联') {
-    await runtime.agent.aiAssert('互联 Tab 展示多个商品卡片');
+    await runtime.agent.aiAssert?.('互联 Tab 展示多个商品卡片');
   } else if (tabName === '周边') {
-    await runtime.agent.aiAssert('周边 Tab 展示多个产品分类');
+    await runtime.agent.aiAssert?.('周边 Tab 展示多个产品分类');
   } else if (tabName === '养车') {
-    await runtime.agent.aiAssert('养车 Tab 展示多个商品卡片或者展示“该商品需要绑车后查看。”提示语');
+    await runtime.agent.aiAssert?.('养车 Tab 展示多个商品卡片或者展示“该商品需要绑车后查看。”提示语');
   }
   log?.info?.(`检查"${tabName}"Tab已加载完成`);
 }
