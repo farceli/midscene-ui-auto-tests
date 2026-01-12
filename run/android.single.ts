@@ -1,4 +1,4 @@
 import 'dotenv/config';
-import { runStoreCarPageSmokeTest } from '@/cases/store/car-page.smoke';
+import { runStoreVehicleTypeJumpTest } from '@/cases/store/vehicle/vehicle-type-jump';
 
-runStoreCarPageSmokeTest('android');
+runStoreVehicleTypeJumpTest('android');

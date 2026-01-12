@@ -24,20 +24,29 @@
 ```text
 .
 ├─ cases/                  # 测试用例
+│  └─ store/
+│     └─ vehicle/
+│        └─ vehicle-type-jump.ts
+├─ common/                 # 业务通用能力
+│  ├─ discovery/
+│  ├─ profile/
+│  ├─ service/
 │  ├─ store/
-│  │  └─ car-page.smoke.ts
-│  └─ profile/
-├─ common/                 # 通用能力
-│  ├─ app-config.ts        # App 启动配置（包名/bundleId）
-│  ├─ runtime.ts           # Midscene runtime：创建 device + agent
-│  ├─ scroll.ts            # 滚动相关封装
-│  └─ sleep.ts
-├─ runners/                # 运行入口
+│  │  └─ index.ts
+│  ├─ vehicle/
+│  └─ launch-app.ts
+├─ run/                    # 运行入口
 │  ├─ android.single.ts
 │  ├─ ios.single.ts
 │  └─ batch.ts
+├─ util/                   # 基础通用能力
+│  ├─ app-config.ts        # App 启动配置（包名/bundleId）
+│  ├─ logger.ts            # 日志封装
+│  ├─ runtime.ts           # Midscene runtime：创建 device + agent
+│  └─ scroll.ts            # 滚动相关封装
 ├─ package.json
-└─ package-lock.json
+├─ package-lock.json
+└─ tsconfig.json
 ```
 
 ---

@@ -1,7 +1,7 @@
 import 'dotenv/config';
-import { runStoreCarPageSmokeTest } from '@/cases/store/car-page.smoke';
+import { runStoreVehicleTypeJumpTest } from '@/cases/store/vehicle/vehicle-type-jump';
 
 (async () => {
-    await runStoreCarPageSmokeTest('android');
-    await runStoreCarPageSmokeTest('ios');
+    await runStoreVehicleTypeJumpTest('android');
+    await runStoreVehicleTypeJumpTest('ios');
 })();
