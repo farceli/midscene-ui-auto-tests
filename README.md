@@ -399,7 +399,7 @@ open WebDriverAgent.xcodeproj
 3. 点击菜单栏的 **Product > Test**（或按 `Cmd + U`）
 4. 首次运行会在 iPhone 上弹出输入密码提示，输入设备密码
 5. 等待 WDA 应用安装并启动
-6. 在 Xcode 控制台中，当看到显示 **"Automatically"** 时，代表 WDA 启动成功
+6. 在 Xcode 控制台中，当看到显示 **"Automation Running"** 时，代表 WDA 启动成功
 
 #### 3.4) 验证 WDA 是否正常运行
 
