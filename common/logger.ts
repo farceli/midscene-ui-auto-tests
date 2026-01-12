@@ -25,7 +25,32 @@ const getLogLevel = (): LogLevelName => {
 const currentLevelName = getLogLevel();
 const currentLevel = levels[currentLevelName];
 
-const getTimestamp = () => new Date().toISOString();
+const beijingTimeZone = 'Asia/Shanghai';
+
+const pad2 = (n: number) => String(n).padStart(2, '0');
+const pad3 = (n: number) => String(n).padStart(3, '0');
+
+const getTimestamp = () => {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: beijingTimeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  })
+    .formatToParts(new Date())
+    .reduce<Record<string, string>>((acc, p) => {
+      if (p.type !== 'literal') acc[p.type] = p.value;
+      return acc;
+    }, {});
+
+  const ms = pad3(new Date().getMilliseconds());
+
+  return `${parts.year}-${parts.month}-${parts.day} ${parts.hour}:${parts.minute}:${parts.second}.${ms}`;
+};
 
 /**
  * 创建一个带上下文的 logger 实例
