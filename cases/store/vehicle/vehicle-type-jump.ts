@@ -8,6 +8,7 @@ import { scrollOnly } from '@/util/scroll';
 import createLogger from '@/util/logger';
 import { selectMenu, selectTab } from '@/common/store';
 import { switchVehicle } from '@/common/profile';
+import { isOwner } from '@/common/store/connect';
 
 // 商店-看车页 Smoke Test
 export async function runStoreVehicleTypeJumpTest(platform: 'android' | 'ios') {
@@ -24,8 +25,12 @@ export async function runStoreVehicleTypeJumpTest(platform: 'android' | 'ios') {
         await launchApp({ platform, device, agent }, { log });
 
 
-        // 切换车辆
-        await switchVehicle(agent, '纯电 cla300l', log);
+        // 检测是否车主
+        const isOwnerResult = await isOwner(agent, log);
+        log.info('检测是否车主结果：', isOwnerResult);
+
+        // // 切换车辆
+        // await switchVehicle(agent, '纯电 cla300l', log);
 
         
         // // 进入商店模块

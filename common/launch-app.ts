@@ -18,7 +18,7 @@ export async function launchApp(
   const log = options?.log;
 
   log?.info('检测 App 是否已启动');
-  const isAppLaunched = await agent.aiBoolean('App 底部导航栏展示：“发现”、“服务”、“车辆”、“商店”和“我的”。');
+  const isAppLaunched = await agent.aiBoolean('当前页面底部导航栏展示：“发现”、“服务”、“车辆”、“商店”和“我的”。');
   if (isAppLaunched) {
     log?.info('App 已启动，直接返回');
     return;
