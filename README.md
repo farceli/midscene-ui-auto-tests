@@ -1,6 +1,6 @@
 # midscene-ui-auto-tests
 
-基于 **Midscene** 的移动端（Android / iOS）UI 自动化测试（TypeScript）。
+基于 **[Midscene.js](https://midscenejs.com/zh/)** 的移动端（Android / iOS）UI 自动化测试（TypeScript）。
 
 ## 项目结构
 
