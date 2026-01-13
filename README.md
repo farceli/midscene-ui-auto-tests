@@ -1,4 +1,4 @@
-# midscene-ui-auto-tests
+## midscene-ui-auto-tests
 
 基于 **[Midscene.js](https://midscenejs.com/zh/)** 的移动端（Android / iOS）UI 自动化测试（TypeScript）。
 
@@ -140,3 +140,9 @@ npx tsx run/batch.ts
 ```
 
 > 提示：如果你本机没有 `tsx`，`npx` 会自动临时下载运行（可能受网络/镜像影响）。
+
+
+## 运行效率与降低 token 消耗
+
+- **多用代码逻辑，少用 `agent.aiXXX`**：能用传统代码逻辑（条件判断、循环、局部函数/工具函数等）解决的问题，尽量在本地代码里完成，减少对大模型 `agent.ai` 能力的依赖，从而降低调用次数、提升执行速度与稳定性。
+- **多用结构化 API，少用 `aiAct`**：在需要调用 AI 能力时，优先使用结构化接口（如 `aiBoolean`、`aiString`、`aiNumber` 等），只在无法结构化表达的复杂操作时再考虑使用 `aiAct`，这样可以显著减少 token 消耗，并让断言/逻辑更可预期、可维护。

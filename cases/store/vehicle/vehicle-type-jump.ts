@@ -1,5 +1,5 @@
 /**
- * 商店-看车页 Smoke Test
+ * 车型跳转测试
  */
 
 import { createRuntime } from '@/util/runtime';
@@ -13,9 +13,9 @@ import { isOwner } from '@/common/store/connect';
 // 商店-看车页 Smoke Test
 export async function runStoreVehicleTypeJumpTest(platform: 'android' | 'ios') {
     // 初始化日志记录器
-    const log = createLogger(`car-page:${platform}`);
+    const log = createLogger(`vehicle-type-jump:${platform}`);
 
-    log.info('开始执行商店-看车页测试');
+    log.info('开始执行车型跳转测试');
 
     // 初始化运行时环境：拿到 AI 执行体 agent 与设备控制器 device
     const { agent, device } = await createRuntime(platform);
@@ -25,9 +25,9 @@ export async function runStoreVehicleTypeJumpTest(platform: 'android' | 'ios') {
         await launchApp({ platform, device, agent }, { log });
 
 
-        // 检测是否车主
-        const isOwnerResult = await isOwner(agent, log);
-        log.info('检测是否车主结果：', isOwnerResult);
+        // // 检测是否车主
+        // const isOwnerResult = await isOwner(agent, log);
+        // log.info('检测是否车主结果：', isOwnerResult);
 
         // // 切换车辆
         // await switchVehicle(agent, '纯电 cla300l', log);
