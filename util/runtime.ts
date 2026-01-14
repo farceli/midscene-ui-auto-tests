@@ -10,38 +10,61 @@
 
 import { AndroidDevice, getConnectedDevices, AndroidAgent } from '@midscene/android';
 import { IOSDevice, IOSAgent } from '@midscene/ios';
+import createLogger from '@/util/logger';
+
 
 /**
  * 创建运行时对象。
  *
  * @throws Android 平台在未连接设备时抛错：`未连接安卓设备`
  */
-export async function createRuntime(platform: 'android' | 'ios'): Promise<{ platform: 'android' | 'ios'; device: any; agent: any }> {
+export async function createRuntime(platform: 'android' | 'ios', context: string): Promise<{ platform: 'android' | 'ios'; device: any; agent: any }> {
+
+  const log = createLogger(`${context}:${platform}`);
+
   if (platform === 'android') {
+    log.info('开始创建：Android 运行环境');
     const devices = await getConnectedDevices();
     if (!devices.length) {
+      log.error('未连接安卓设备');
       throw new Error('未连接安卓设备');
     }
-
     const device = new AndroidDevice(devices[0].udid);
+    log.debug('开始连接：安卓设备：', devices[0].udid);
     await device.connect();
+    log.debug('连接完成：安卓设备：', devices[0].udid);
 
+    log.debug('开始创建：Android Agent');
     const agent = new AndroidAgent(device, {
       cache: { id: 'my-cache-id' },
+      autoPrintReportMsg: false,
+      onTaskStartTip: (tip: string) => {
+        log.debug(tip);
+      }
     });
-
+    log.debug('创建完成：Android Agent');
+    log.info('创建完成：Android 运行环境');
     return { platform, device, agent };
   }
 
+  log.info('开始创建：iOS 运行环境');
   const device = new IOSDevice({
     wdaPort: 8100,
     wdaHost: 'localhost',
   });
+  log.debug('开始连接：iOS 设备');
   await device.connect();
+  log.debug('连接完成：iOS 设备');
 
+  log.debug('开始创建：iOS Agent');
   const agent = new IOSAgent(device, {
     cache: { id: 'my-cache-id' },
+    autoPrintReportMsg: false,
+    onTaskStartTip: (tip: string) => {
+      log.debug(tip);
+    }
   });
-
+  log.debug('创建完成：iOS Agent');
+  log.info('创建完成：iOS 运行环境');
   return { platform, device, agent };
 }
