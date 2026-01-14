@@ -2,6 +2,17 @@
 
 基于 **[Midscene.js](https://midscenejs.com/zh/)** 的移动端（Android / iOS）UI 自动化测试（TypeScript）。
 
+Todo
+README.md
+1、增加 git clone
+2、环境要求部分改到设备准备下方
+3、ios 安装 xcode 后需要打开并安装 macos
+4、ios 的 xcode-setting 增加快捷键
+5、增加xcode-select -p打印非标准结果如何解决
+6、首次打开 Xcode需要下载 macos 和 ios
+7、安装 Android Studio + SDK并配置 Android_SDK_ROOT环境变量
+8、Android 和 iOS 文档引用官方
+
 ## 项目结构
 
 ```text
