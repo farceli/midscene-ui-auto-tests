@@ -77,7 +77,7 @@ cp .env.example .env
 **安装方式：**
 
 1. 打开 **App Store**，搜索并安装 **Xcode**
-2. 安装命令行工具：执行 `xcode-select --install`（如已安装可忽略）
+2. 安装命令行工具：执行 `xcode-select --install`
 3. 接受许可协议：执行 `sudo xcodebuild -license accept`
 4. 打开 Xcode 并完成初始化：进入 **Xcode > Settings > Accounts**，登录你的 Apple ID（用于真机调试）
 
