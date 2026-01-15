@@ -2,17 +2,6 @@
 
 基于 **[Midscene.js](https://midscenejs.com/zh/)** 的移动端（Android / iOS）UI 自动化测试（TypeScript）。
 
-Todo
-README.md
-1、增加 git clone
-2、环境要求部分改到设备准备下方
-3、ios 安装 xcode 后需要打开并安装 macos
-4、ios 的 xcode-setting 增加快捷键
-5、增加xcode-select -p打印非标准结果如何解决
-6、首次打开 Xcode需要下载 macos 和 ios
-7、安装 Android Studio + SDK并配置 Android_SDK_ROOT环境变量
-8、Android 和 iOS 文档引用官方
-
 ## 项目结构
 
 ```text
@@ -28,47 +17,47 @@ README.md
 
 ## 快速开始
 
-**环境要求：**
-
-* Node.js `>= 18`
-* Android：`adb` 可用 + 已连接设备
-* iOS：macOS + WDA 可用（默认 `localhost:8100`）
-
-**安装依赖：**
-
-```bash
-npm ci
-```
-
-**配置环境变量：**
-
-本仓库需要你自行准备 `.env`。
-
-```bash
-cp .env.example .env
-```
-
-配置内容详见 `.env.example` 文件。
-
 ### 环境准备
 
 #### Android 环境准备
 
-* **`ADB`**：`ADB` 是 Android 开发工具，用于连接和控制 Android 设备，是运行 Android 自动化测试的前提。
+> 提示：你也可以参考 [Midscene 官方教程](https://midscenejs.com/zh/android-getting-started.html) 进行 Android 环境准备。
+
+* **Android SDK**：Android SDK 是 Android 开发工具包，包含 `adb` 等工具，用于连接和控制 Android 设备，是运行 Android 自动化测试的前提。
 * **USB 调试**：USB 调试允许计算机通过 USB 连接控制 Android 设备，这是 `adb` 连接设备的前提条件。
 
-**ADB**
+**Android SDK**
 
 **安装方式：**
 
-* **方式 A（推荐）**：通过 [Android Studio](https://developer.android.com/studio) 安装，在 SDK Manager 中勾选 **Android SDK Platform-Tools**
-* **方式 B**：从 [Android 开发者官网](https://developer.android.com/tools/releases/platform-tools) 独立下载 platform-tools 压缩包并解压
+通过 [Android Studio](https://developer.android.com/studio) 安装，在 SDK Manager 中勾选 **Android SDK Platform-Tools**。
 
-安装完成后，需要将 `adb` 添加到系统 PATH 环境变量中，使终端可以在任何目录下直接执行 `adb` 命令。
+**配置环境变量：**
+
+安装完成后，需要配置环境变量，具体配置方法请参考 [Android 官方文档](https://developer.android.com/tools/variables?hl=zh-cn)。
 
 **验证安装：**
 
-在终端执行 `adb version`，应显示 adb 的版本信息。如提示 `command not found`，请检查安装和环境变量配置。
+在终端执行以下命令进行验证：
+
+```bash
+adb --version
+echo $ANDROID_HOME
+```
+
+**验证结果示例：**
+
+```bash
+# adb --version 输出示例
+Android Debug Bridge version 1.0.41
+Version 34.0.4-10481041
+Installed as /Users/username/Library/Android/sdk/platform-tools/adb
+
+# echo $ANDROID_HOME 输出示例
+/Users/username/Library/Android/sdk
+```
+
+如提示 `command not found` 或路径为空，请检查安装和环境变量配置。
 
 **USB 调试**
 
@@ -79,6 +68,8 @@ cp .env.example .env
 
 #### iOS 环境准备
 
+> 提示：你也可以参考 [Midscene 官方教程](https://midscenejs.com/zh/ios-getting-started.html) 进行 iOS 环境准备。
+
 * **Xcode**：Xcode 是 iOS 开发的官方 IDE，提供编译工具、模拟器和设备管理功能，是运行 iOS 自动化测试的基础环境。
 * **iOS 设备**：需要 iOS 真机设备用于运行测试用例。
 * **WebDriverAgent（WDA）**：WebDriverAgent 是 iOS 自动化测试框架，Midscene 依赖它来控制 iOS 设备。
@@ -87,14 +78,13 @@ cp .env.example .env
 
 **安装方式：**
 
-1. 打开 **App Store**，搜索并安装 **Xcode**
+1. 打开 **App Store**，搜索并安装 **Xcode**，安装完成后打开 Xcode 并完成初始化：在初始化时勾选 **iOS** 并安装，然后进入 **Xcode > Settings**（快捷键：`Cmd + ,`）> **Accounts**，登录你的 Apple ID（用于真机调试）
 2. 安装命令行工具：执行 `xcode-select --install`
 3. 接受许可协议：执行 `sudo xcodebuild -license accept`
-4. 打开 Xcode 并完成初始化：进入 **Xcode > Settings > Accounts**，登录你的 Apple ID（用于真机调试）
 
 **验证安装：**
 
-在终端执行 `xcode-select -p`，应输出 Xcode 的路径（例如：`/Applications/Xcode.app/Contents/Developer`）。
+在终端执行 `xcode-select -p`，应输出 Xcode 的路径（例如：`/Applications/Xcode.app/Contents/Developer`）。如果打印的路径和示例出入很大，建议解决一下，避免后续问题。
 
 **iOS 设备**
 
@@ -129,6 +119,35 @@ WDA 服务运行在 iPhone 设备本机的 `localhost:8100`，Mac 无法直接�
 **验证安装：**
 
 在 Mac 浏览器中访问 `http://localhost:8100/status`，如果返回 JSON 格式的状态信息，说明 WDA 已正常运行。
+
+**环境要求：**
+
+* Node.js `>= 18`
+* Android：`adb` 可用 + 已连接设备
+* iOS：macOS + WDA 可用（默认 `localhost:8100`）
+
+**克隆仓库：**
+
+```bash
+git clone git@github.com:farceli/midscene-ui-auto-tests.git
+cd midscene-ui-auto-tests
+```
+
+**安装依赖：**
+
+```bash
+npm ci
+```
+
+**配置环境变量：**
+
+本仓库需要你自行准备 `.env`。
+
+```bash
+cp .env.example .env
+```
+
+配置内容详见 `.env.example` 文件。
 
 ## 如何运行
 
