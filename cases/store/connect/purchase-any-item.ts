@@ -7,7 +7,6 @@ import { createRuntime } from '@/util/runtime';
 import { launchApp } from '@/common/launch-app';
 import { switchVehicle } from '@/common/profile';
 import { isOwner } from '@/common/store/connect';
-import { selectMenu, selectTab } from '@/common/store';
 
 const context = 'purchase-any-item';
 
