@@ -26,7 +26,7 @@ export async function switchVehicle(
   log.debug(`判断是否已选中预期车辆："${vehicleName}"`);
   const isSelectedVehicle = await agent.aiBoolean(`当前页面的车辆管理部分是否已选中预期车辆“${vehicleName}”`);
   if (isSelectedVehicle) {
-    log.info('已经选中预期车辆，切换车辆完成');
+    log.info('已经选中预期车辆，无需切换');
     return;
   }
   log.debug('进入车辆管理页面');
@@ -58,4 +58,14 @@ export async function switchVehicle(
   }
   log.error(`滚动后仍未找到车型：${vehicleName}`);
   throw new Error(`滚动后仍未找到车型：${vehicleName}`);
+}
+
+// 切换到所属车辆(车辆名称从.env获取)
+export async function switchOwnerVehicle(agent: any, log: any): Promise<void> {
+  const vehicleName = process.env.OWNER_VEHICLE_NAME;
+  if (!vehicleName) {
+    throw new Error('车辆名称未配置');
+  }
+  await switchVehicle(agent, vehicleName, log);
+
 }

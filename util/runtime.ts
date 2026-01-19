@@ -36,7 +36,7 @@ export async function createRuntime(platform: 'android' | 'ios', context: string
 
     log.debug('开始创建：Android Agent');
     const agent = new AndroidAgent(device, {
-      cache: { id: 'my-cache-id' },
+      // cache: { id: 'my-cache-id' },
       autoPrintReportMsg: false,
       onTaskStartTip: (tip: string) => {
         log.debug(tip);
@@ -58,7 +58,7 @@ export async function createRuntime(platform: 'android' | 'ios', context: string
 
   log.debug('开始创建：iOS Agent');
   const agent = new IOSAgent(device, {
-    cache: { id: 'my-cache-id' },
+    // cache: { id: 'my-cache-id' },
     autoPrintReportMsg: false,
     onTaskStartTip: (tip: string) => {
       log.debug(tip);
