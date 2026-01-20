@@ -45,12 +45,12 @@ export async function runStoreVehicleTypeJumpTest(platform: 'android' | 'ios') {
         await agent.aiTap('返回');
         await agent.aiWaitFor('看车页面展示多种车型');
 
-        log.info('验证所有车型跳转功能');
+        log.info('逐个验证车型跳转功能');
         for (const carModel of expectedCarModelList) {
             log.info(`验证车型：${carModel} 跳转功能`);
             const isCarModelExist = await agent.aiBoolean(`当前页面是否存在“${carModel}”车型`);
             if (!isCarModelExist) {
-                log.info(`当前页面不存在“${carModel}”，开始向下滚动查找`);
+                log.debug(`当前页面不存在“${carModel}”，开始向下滚动查找`);
                 await scrollOnly(agent, {
                     direction: 'down',
                     scrollOn: '车型列表页面',
@@ -65,22 +65,23 @@ export async function runStoreVehicleTypeJumpTest(platform: 'android' | 'ios') {
                     throw new Error(`滚动后仍未找到车型：${carModel}`);
                 }
 
-                log.info(`滚动结束，已找到车型，准备点击`);
+                log.debug(`滚动结束，已找到车型，准备点击`);
             }
 
-            log.debug(`点击车型：${carModel}`);
+            log.info(`点击车型：${carModel}并验证跳转功能`);
             await agent.aiTap(carModel);
-
-            log.debug('等待 OneWeb 车型列表页加载完成');
             await agent.aiWaitFor('1、页面标题为“梅赛德斯-奔驰”，2、页面中部区域展示汽车图片');
+            await agent.aiAssert(`页面上方有两行 Tab，第一行车型 Tab 当前已选中“${carModel}”，且页面展示“预约品鉴”按钮`);
 
-            log.debug(`断言 OneWeb 已选中车型：${carModel}`);
-            await agent.aiAssert(`页面上方有两行 Tab，第一行车型 Tab 当前已选中“${carModel}”`);
+            log.info('验证“预约品鉴”跳转')
+            await agent.aiTap('"预约品鉴"按钮')
+            await agent.aiWaitFor('页面标题为“预约品鉴”，且页面加载完成')
+            await agent.aiAssert('页面无异常；页面展示“姓名”、“手机号码”、“意向车系”、“经销商”、“金融方案”和“立即预约”按钮')
+            await agent.aiTap('返回')
 
             log.debug('从 OneWeb 返回上一页（看车页）');
+            await agent.aiWaitFor('页面加载完成且展示“预约品鉴”按钮')
             await agent.aiTap('返回');
-
-            log.debug('等待看车页加载完成');
             await agent.aiWaitFor('看车页面展示多种车型');
         }
 
