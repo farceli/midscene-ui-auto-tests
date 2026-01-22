@@ -11,7 +11,7 @@ export async function selectMenu(
   if (selectedMenu !== moduleName) {
     log.debug(`导航栏未选中“${moduleName}”，点击“${moduleName}”`);
     await agent.aiTap(`导航栏的“${moduleName}”模块`);
-    await agent.aiWaitFor('页面顶部展示头像、昵称、订单中心、权益中心');
+    await agent.aiWaitFor('页面展示头像、昵称、订单中心、权益中心');
   }
 }
 

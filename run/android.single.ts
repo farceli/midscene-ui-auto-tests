@@ -3,4 +3,4 @@ import { runStoreVehicleTypeJumpTest } from '@/cases/store/vehicle/vehicle-type-
 import { runPurchaseAnyItemTest } from '@/cases/store/connect/purchase-any-item'
 
 // runStoreVehicleTypeJumpTest('android');
-runPurchaseAnyItemTest('android');
+runStoreVehicleTypeJumpTest('android');

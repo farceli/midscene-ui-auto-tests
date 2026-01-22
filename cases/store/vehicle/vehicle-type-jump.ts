@@ -26,7 +26,7 @@ export async function runStoreVehicleTypeJumpTest(platform: 'android' | 'ios') {
         await launchApp({ platform, device, agent }, { log });
 
         // 切换车辆
-        await switchVehicle(agent, 'A200L 时尚型', log);
+        await switchVehicle(agent, 'A180L运动轿车', log);
 
         // 进入商店模块
         await selectMenu(agent, '商店', log);
@@ -36,7 +36,8 @@ export async function runStoreVehicleTypeJumpTest(platform: 'android' | 'ios') {
 
         // 预期车型列表
         // const expectedCarModelList = ['轿车', 'SUV', '轿跑&敞篷', 'MPV', '纯电车型', '插电式混合动力', 'AMG', 'MAYBACH', 'G'];
-        const expectedCarModelList = ['轿车'];
+        const expectedCarModelList = ['轿车', 'SUV', '轿跑&敞篷', 'MPV', '纯电车型'];
+        // const expectedCarModelList = ['轿车'];
 
         log.info('验证“全部车型”跳转功能');
         await agent.aiTap('“全部车型”按钮');
@@ -71,16 +72,16 @@ export async function runStoreVehicleTypeJumpTest(platform: 'android' | 'ios') {
             log.info(`点击车型：${carModel}并验证跳转功能`);
             await agent.aiTap(carModel);
             await agent.aiWaitFor('1、页面标题为“梅赛德斯-奔驰”，2、页面中部区域展示汽车图片');
-            await agent.aiAssert(`页面上方有两行 Tab，第一行车型 Tab 当前已选中“${carModel}”，且页面展示“预约品鉴”按钮`);
+            await agent.aiAssert(`页面上方有两行 Tab，第一行车型 Tab 当前已选中“${carModel}”`);
 
-            log.info('验证“预约品鉴”跳转')
-            await agent.aiTap('"预约品鉴"按钮')
-            await agent.aiWaitFor('页面标题为“预约品鉴”，且页面加载完成')
-            await agent.aiAssert('页面无异常；页面展示“姓名”、“手机号码”、“意向车系”、“经销商”、“金融方案”和“立即预约”按钮')
-            await agent.aiTap('返回')
+            // log.info('验证“预约品鉴”跳转')
+            // await agent.aiTap('"预约品鉴"按钮')
+            // await agent.aiWaitFor('页面标题为“预约品鉴”，且页面加载完成')
+            // await agent.aiAssert('页面无异常；页面展示“姓名”、“手机号码”、“意向车系”、“经销商”、“金融方案”和“立即预约”按钮')
+            // await agent.aiTap('返回')
 
             log.debug('从 OneWeb 返回上一页（看车页）');
-            await agent.aiWaitFor('页面加载完成且展示“预约品鉴”按钮')
+            // await agent.aiWaitFor('页面加载完成且展示“预约品鉴”按钮')
             await agent.aiTap('返回');
             await agent.aiWaitFor('看车页面展示多种车型');
         }

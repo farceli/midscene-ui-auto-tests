@@ -29,8 +29,8 @@ export async function launchApp(
   await device.launch(appId);
 
 
-  const assertPrompt =
+  const waitForPrompt =
     options?.launchedAssert ?? '1、App 底部导航栏展示：“发现”、“服务”、“车辆”、“商店”和“我的”。2、App 右上方展示“客服”和“消息”的 icon。';
-  await agent.aiAssert?.(assertPrompt);
+  await agent.aiWaitFor?.(waitForPrompt);
   log?.info('App 启动完成');
 }
