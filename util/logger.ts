@@ -29,7 +29,7 @@ const currentLevelName = getLogLevel();
 /** 当前生效的日志级别阈值 */
 const currentLevel = levels[currentLevelName];
 
-const beijingTimeZone = 'Asia/Shanghai';
+const shanghaiTimeZone = 'Asia/Shanghai';
 
 const pad3 = (n: number) => String(n).padStart(3, '0');
 
@@ -37,7 +37,7 @@ const pad3 = (n: number) => String(n).padStart(3, '0');
 const getTimestamp = () => {
   const now = new Date();
   const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: beijingTimeZone,
+    timeZone: shanghaiTimeZone,
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',

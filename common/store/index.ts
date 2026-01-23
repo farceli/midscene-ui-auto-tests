@@ -9,7 +9,8 @@ export async function selectMenu(
   if (selectedMenu !== moduleName) {
     log.debug(`导航栏未选中“${moduleName}”，点击“${moduleName}”`);
     await agent.aiTap(`导航栏的“${moduleName}”模块`);
-    await agent.aiWaitFor('商店页面上方显示"精选"、"看车"、"互联"、"周边"和"养车"五个 Tab');
+    // await agent.aiWaitFor('商店页面上方显示"精选"、"看车"、"互联"、"周边"和"养车"五个 Tab');
+    await agent.aiWaitFor('商店页面上方显示"精选"、"看车"、"互联"、"周边"四个 Tab');
   }
 }
 
