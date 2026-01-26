@@ -8,6 +8,7 @@ import { scrollOnly } from '@/util/scroll';
 import createLogger from '@/util/logger';
 import { selectMenu } from '@/common/navigation';
 import { selectStoreTab } from '@/common/store';
+import { switchOwnerVehicle } from '@/common/profile';
 
 const context = 'vehicle-type-jump';
 
@@ -22,10 +23,11 @@ export async function runVehicleTypeJumpTest(platform: 'android' | 'ios') {
     const { agent, device } = await createRuntime(platform, context);
 
     try {
-        log.info('启动 App，进入商店-看车 Tab')
+        // log.info('启动 App，进入商店-看车 Tab')
         // await launchApp({ platform, device, agent }, { log });
         // await selectMenu(agent, '商店', log);
-        await selectStoreTab(agent, '周边', log);
+        // await selectStoreTab(agent, '周边', log);
+        await switchOwnerVehicle(agent, log);
 
         // // 预期车型列表
         // // const expectedCarModelList = ['轿车', 'SUV', '轿跑&敞篷', 'MPV', '纯电车型', '插电式混合动力', 'AMG', 'MAYBACH', 'G'];
