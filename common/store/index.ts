@@ -1,18 +1,4 @@
-export async function selectMenu(
-  agent: any,
-  moduleName: '商店',
-  log: any,
-): Promise<void> {
-  log.debug('检查底部导航栏状态');
-  const selectedMenu = await agent.aiQuery('string, 屏幕底部导航栏已选中菜单');
-  log.debug('当前选中菜单：', selectedMenu);
-  if (selectedMenu !== moduleName) {
-    log.debug(`导航栏未选中“${moduleName}”，点击“${moduleName}”`);
-    await agent.aiTap(`导航栏的“${moduleName}”模块`);
-    // await agent.aiWaitFor('商店页面上方显示"精选"、"看车"、"互联"、"周边"和"养车"五个 Tab');
-    await agent.aiWaitFor('商店页面上方显示"精选"、"看车"、"互联"、"周边"四个 Tab');
-  }
-}
+// selectMenu 已迁移到 @/common/navigation
 
 export async function selectTab(
   agent: any,

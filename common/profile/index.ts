@@ -1,19 +1,5 @@
 import { scrollOnly } from '@/util/scroll';
-
-export async function selectMenu(
-  agent: any,
-  moduleName: '我的',
-  log: any,
-): Promise<void> {
-  log.debug('检查底部导航栏状态');
-  const selectedMenu = await agent.aiQuery('string, 屏幕底部导航栏已选中菜单');
-  log.debug('当前选中菜单：', selectedMenu);
-  if (selectedMenu !== moduleName) {
-    log.debug(`导航栏未选中“${moduleName}”，点击“${moduleName}”`);
-    await agent.aiTap(`导航栏的“${moduleName}”模块`);
-    await agent.aiWaitFor('页面展示头像、昵称、订单中心、权益中心');
-  }
-}
+import { selectMenu } from '@/common/navigation';
 
 // 切换车辆，根据车辆名称切换车辆
 export async function switchVehicle(

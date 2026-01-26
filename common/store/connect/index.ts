@@ -1,4 +1,4 @@
-import { selectMenu } from '@/common/store';
+import { selectMenu } from '@/common/navigation';
 import { selectTab } from '@/common/store';
 
 /**

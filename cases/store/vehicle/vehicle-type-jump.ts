@@ -6,7 +6,8 @@ import { createRuntime } from '@/util/runtime';
 import { launchApp } from '@/common/launch-app';
 import { scrollOnly } from '@/util/scroll';
 import createLogger from '@/util/logger';
-import { selectMenu, selectTab } from '@/common/store';
+import { selectMenu } from '@/common/navigation';
+import { selectTab } from '@/common/store';
 
 const context = 'vehicle-type-jump';
 
