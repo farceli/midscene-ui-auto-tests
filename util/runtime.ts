@@ -12,6 +12,9 @@ import { AndroidDevice, getConnectedDevices, AndroidAgent } from '@midscene/andr
 import { IOSDevice, IOSAgent } from '@midscene/ios';
 import createLogger from '@/util/logger';
 
+/** 平台类型 */
+export type Platform = 'android' | 'ios';
+
 /**
  * 创建 Agent 的通用配置
  *
@@ -40,7 +43,7 @@ function createAgentConfig(log: ReturnType<typeof createLogger>) {
  * @returns 运行时对象，包含 platform、device 和 agent
  *
  */
-export async function createRuntime(platform: 'android' | 'ios', context: string): Promise<{ platform: 'android' | 'ios'; device: any; agent: any }> {
+export async function createRuntime(platform: Platform, context: string): Promise<{ platform: Platform; device: any; agent: any }> {
 
   const log = createLogger(`${context}:${platform}`);
 
