@@ -1,5 +1,34 @@
-import type { Platform } from '@/util/app-config';
-import { getAppLaunchConfig } from '@/util/app-config';
+/**
+ * App 启动相关功能。
+ * - 从环境变量读取 appId 配置
+ * - 启动 App 并等待加载完成
+ */
+
+export type Platform = 'android' | 'ios';
+
+const getEnvKeyByPlatform = (platform: Platform) =>
+  platform === 'android' ? 'APP_ID_ANDROID' : 'APP_ID_IOS';
+
+const getRequiredAppIdFromEnv = (platform: Platform): string => {
+  const envKey = getEnvKeyByPlatform(platform);
+  const value = process.env[envKey];
+  const appId = value?.trim();
+  if (!appId) {
+    throw new Error(`缺少环境变量 ${envKey}：请在 .env 或运行环境中配置对应平台的 appId`);
+  }
+  return appId;
+};
+
+/**
+ * 获取指定平台的启动配置（未配置 env 则抛错）
+ *
+ * @param platform 平台类型
+ * @returns 包含 appId 的配置对象
+ * @throws {Error} 当环境变量未配置时
+ */
+function getAppLaunchConfig(platform: Platform): { appId: string } {
+  return { appId: getRequiredAppIdFromEnv(platform) };
+}
 
 type Runtime = {
   platform: Platform;
