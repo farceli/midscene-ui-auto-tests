@@ -4,7 +4,7 @@
 
 import { createRuntime } from '@/util/runtime';
 import { launchApp } from '@/common/launch-app';
-import { scrollOnly } from '@/util/scroll';
+import { scrollUntilVisible } from '@/util/scroll';
 import createLogger from '@/util/logger';
 import { selectMenu } from '@/common/navigation';
 import { selectStoreTab } from '@/common/store';
@@ -26,8 +26,14 @@ export async function runVehicleTypeJumpTest(platform: 'android' | 'ios') {
         // log.info('启动 App，进入商店-看车 Tab')
         // await launchApp({ platform, device, agent }, { log });
         // await selectMenu(agent, '商店', log);
-        // await selectStoreTab(agent, '周边', log);
-        await switchOwnerVehicle(agent, log);
+        await selectStoreTab(agent, '精选', log);
+        await scrollUntilVisible(agent, {
+            direction: 'down',
+            scrollOn: '商品列表',
+            distance: null,
+            stopWhenSee: '商品列表中存在预期商品"XXX"',
+        });
+        // await switchOwnerVehicle(agent, log);
 
         // // 预期车型列表
         // // const expectedCarModelList = ['轿车', 'SUV', '轿跑&敞篷', 'MPV', '纯电车型', '插电式混合动力', 'AMG', 'MAYBACH', 'G'];
@@ -56,9 +62,10 @@ export async function runVehicleTypeJumpTest(platform: 'android' | 'ios') {
         //     const isCarModelExist = await agent.aiBoolean(`当前页面是否存在“${carModel}”车型`);
         //     if (!isCarModelExist) {
         //         log.debug(`当前页面不存在“${carModel}”，开始向下滚动查找`);
-        //         await scrollOnly(agent, {
+        //         await scrollUntilVisible(agent, {
         //             direction: 'down',
         //             scrollOn: '车型列表页面',
+        //             distance: null,
         //             stopWhenSee: `车型列表中存在"${carModel}"车型`,
         //         });
 

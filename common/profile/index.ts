@@ -4,7 +4,7 @@
  * 提供车辆切换、车辆管理等个人中心相关操作能力。
  */
 
-import { scrollOnly } from '@/util/scroll';
+import { scrollUntilVisible } from '@/util/scroll';
 import { selectMenu } from '@/common/navigation';
 import type createLogger from '@/util/logger';
 
@@ -94,9 +94,10 @@ export async function switchVehicle(
   }
 
   log.debug('不存在预期车辆，开始向下滚动查找');
-  await scrollOnly(agent, {
+  await scrollUntilVisible(agent, {
     direction: 'down',
     scrollOn: '车辆列表',
+    distance: null,
     stopWhenSee: `车辆列表中存在预期车辆"${vehicleName}"`,
   });
 
