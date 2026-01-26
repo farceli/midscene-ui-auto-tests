@@ -1,5 +1,5 @@
 import { selectMenu } from '@/common/navigation';
-import { selectTab } from '@/common/store';
+import { selectStoreTab } from '@/common/store';
 
 /**
  * 
@@ -14,7 +14,7 @@ export async function isOwner(
     log.debug('进入“商店”模块');
     await selectMenu(agent, '商店', log);
     log.debug('进入“互联”Tab');
-    await selectTab(agent, '互联', log);
+    await selectStoreTab(agent, '互联', log);
     log.debug('滑动页面到最上方');
     await agent.aiScroll({ scrollType: 'scrollToTop' })
     log.debug('检测是否车主');

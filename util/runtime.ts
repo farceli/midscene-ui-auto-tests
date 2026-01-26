@@ -15,6 +15,8 @@ import createLogger from '@/util/logger';
 /** 平台类型 */
 export type Platform = 'android' | 'ios';
 
+const AI_ACTION_CONTEXT = '禁止拨打电话、发送短信和支付类敏感操作';
+
 /**
  * 创建 Agent 的通用配置
  *
@@ -24,6 +26,7 @@ export type Platform = 'android' | 'ios';
 function createAgentConfig(log: ReturnType<typeof createLogger>) {
   return {
     // cache: { id: 'my-cache-id' },
+    aiActionContext: AI_ACTION_CONTEXT,
     autoPrintReportMsg: false,
     onTaskStartTip: (tip: string) => {
       log.debug(tip);
