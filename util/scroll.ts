@@ -36,7 +36,7 @@ export interface ScrollUntilVisibleParams {
     direction: ScrollDirection;
 
     /** 滚动区域（传给 `aiScroll` 的 locate），如“车型列表页面”、“车辆列表”等 */
-    scrollOn: string;
+    scrollOn?: string;
 
     /**
      * 每次滚动距离（像素）。
@@ -44,6 +44,13 @@ export interface ScrollUntilVisibleParams {
      * - 传入 null：不传递 distance 字段，交给 Midscene 决定滚动距离
      */
     distance: number | null;
+
+    /**
+     * 每次滚动后执行的断言（自然语言，可选）。
+     * - 若提供：每次滚动后都会调用 `aiAssert(assertAfterEachScroll)`
+     * - 若不提供：不会额外执行断言
+     */
+    assertAfterEachScroll?: string;
 
     /** 最大滚动次数，默认 30（达到上限后停止滚动，不再抛错） */
     maxScrolls?: number;
@@ -86,6 +93,7 @@ export async function scrollUntilVisible(
         scrollOn,
         distance,
         maxScrolls = 30,
+        assertAfterEachScroll,
         stopWhenSee,
     } = params;
 
@@ -114,6 +122,11 @@ export async function scrollUntilVisible(
         }
 
         await agent.aiScroll(scrollParam, scrollOn);
+
+        // 如配置，则在每次滚动后先执行断言
+        if (assertAfterEachScroll) {
+            await agent.aiAssert(assertAfterEachScroll);
+        }
 
         const ok = await agent.aiBoolean(stopWhenSee);
         if (ok) {
