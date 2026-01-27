@@ -13,6 +13,23 @@ const log = createLogger('scroll');
 /** 滚动方向 */
 export type ScrollDirection = 'down' | 'up' | 'left' | 'right';
 
+/** 随机滚动参数 */
+export interface RandomScrollParams {
+    /** 滚动方向（singleAction） */
+    direction: ScrollDirection;
+
+    /** 滚动区域（传给 `aiScroll` 的 locate），如“列表区域”等 */
+    scrollOn: string;
+
+    /** 滚动次数范围（闭区间），单位：次 */
+    minTimes: number;
+    maxTimes: number;
+
+    /** 每次滚动距离范围（闭区间，像素） */
+    minDistance: number;
+    maxDistance: number;
+}
+
 /** 滚动参数 */
 export interface ScrollUntilVisibleParams {
     /** 滚动方向（singleAction） */
@@ -109,3 +126,66 @@ export async function scrollUntilVisible(
     log.debug('达到最大滚动次数，停止滚动。');
 }
 
+/**
+ * 随机滚动若干次。
+ *
++ * @param agent Agent 实例（需实现 `aiScroll`）
+ * @param params 随机滚动参数，含次数与距离的范围
+ */
+export async function randomScroll(
+    agent: any,
+    params: RandomScrollParams,
+): Promise<void> {
+    const {
+        direction,
+        scrollOn,
+        minTimes,
+        maxTimes,
+        minDistance,
+        maxDistance,
+    } = params;
+
+    if (minTimes < 1 || maxTimes < 1) {
+        throw new Error('randomScroll: minTimes 和 maxTimes 必须 >= 1');
+    }
+    if (minTimes > maxTimes) {
+        throw new Error(`randomScroll: minTimes(${minTimes}) 必须 <= maxTimes(${maxTimes})`);
+    }
+    if (minDistance < 0 || maxDistance < 0) {
+        throw new Error('randomScroll: minDistance 和 maxDistance 不能为负数');
+    }
+    if (minDistance > maxDistance) {
+        throw new Error(`randomScroll: minDistance(${minDistance}) 必须 <= maxDistance(${maxDistance})`);
+    }
+
+    const times = randomIntInclusive(minTimes, maxTimes);
+
+    log.debug('开始执行随机滚动', {
+        direction,
+        scrollOn,
+        times,
+        minTimes,
+        maxTimes,
+        minDistance,
+        maxDistance,
+    });
+
+    for (let i = 0; i < times; i++) {
+        const distance = randomIntInclusive(
+            Math.max(1, minDistance),
+            Math.max(1, maxDistance),
+        );
+
+        log.debug(`随机滚动 ${i + 1}/${times}`);
+        await agent.aiScroll(
+            { scrollType: 'singleAction', direction, distance },
+            scrollOn,
+        );
+    }
+}
+
+function randomIntInclusive(min: number, max: number): number {
+    const a = Math.ceil(min);
+    const b = Math.floor(max);
+    return Math.floor(Math.random() * (b - a + 1)) + a;
+}
