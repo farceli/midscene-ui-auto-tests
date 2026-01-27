@@ -1,18 +1,18 @@
 /**
  * 统一日志工具，通过 `LOG_LEVEL` 环境变量控制级别。
- * 时间戳固定为北京时间 `YYYY-MM-DD HH:mm:ss.SSS` 格式。
+ * 时间戳 `YYYY-MM-DD HH:mm:ss.SSS` 格式。
  */
 
-/** 日志级别数值映射，用于阈值比较 */
+/** 日志级别数值映射，用于阈值比较（数值越大，日志越多） */
 const levels = {
-  silent: 0,
+  silent: 0, // 不输出任何日志
   error: 1,
   warn: 2,
   info: 3,
   debug: 4,
 } as const;
 
-type LogLevelName = keyof typeof levels;
+export type LogLevelName = keyof typeof levels;
 
 /** 从 `LOG_LEVEL` 环境变量获取级别，默认为 'info' */
 const getLogLevel = (): LogLevelName => {
@@ -61,13 +61,30 @@ const getTimestamp = () => {
  * 创建带可选上下文的 logger 实例。
  * @param context 上下文，如 'module:platform'
  */
-const createLogger = (context?: string) => {
+type LoggerShape = {
+  debug: (...args: unknown[]) => void;
+  info: (...args: unknown[]) => void;
+  warn: (...args: unknown[]) => void;
+  error: (...args: unknown[]) => void;
+};
+
+export type Logger = LoggerShape;
+
+const createLogger = (context?: string): Logger => {
   const prefix = context ? `[${context}]` : '';
 
   const log = (level: LogLevelName, ...args: unknown[]) => {
+    if (level === 'silent') return;
     if (levels[level] <= currentLevel) {
       const levelTag = `[${level.toUpperCase()}]`.padEnd(7, ' ');
-      const logFunc = console[level] || console.log;
+      const logFunc =
+        level === 'error'
+          ? console.error
+          : level === 'warn'
+          ? console.warn
+          : level === 'info'
+          ? console.info
+          : console.debug;
       logFunc(`[${getTimestamp()}] ${levelTag}${prefix}`, ...args);
     }
   };

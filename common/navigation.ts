@@ -44,7 +44,7 @@ export async function selectMenu(
   log.debug('当前选中菜单：', selectedMenu);
 
   if (selectedMenu === menuName) {
-    log.debug(`导航栏已选中"${menuName}"，无需切换`);
+    log.info(`导航栏已选中"${menuName}"，无需切换`);
     return;
   }
 
@@ -56,4 +56,5 @@ export async function selectMenu(
   log.debug(`等待"${menuName}"页面加载完成`);
   await agent.aiWaitFor(waitCondition);
   log.debug(`"${menuName}"页面加载完成`);
+  log.info(`导航栏已选中"${menuName}"`);
 }

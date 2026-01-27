@@ -43,7 +43,7 @@ export async function selectStoreTab(
   log.debug('当前选中 Tab：', selectedTab);
 
   if (selectedTab === tabName) {
-    log.debug(`商店顶部已选中"${tabName}"，直接验证加载状态`);
+    log.info(`商店顶部已选中"${tabName}"`);
   } else {
     log.debug(`商店顶部未选中"${tabName}"，点击"${tabName}"`);
     await agent.aiTap(`商店顶部的"${tabName}"Tab`);
@@ -54,4 +54,5 @@ export async function selectStoreTab(
   log.debug(`检查"${tabName}" Tab 是否加载完成`);
   await agent.aiAssert(assertCondition);
   log.debug(`"${tabName}" Tab 已加载完成`);
+  log.info(`商店顶部已选中"${tabName}"Tab`);
 }
