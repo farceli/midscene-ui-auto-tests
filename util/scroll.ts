@@ -8,7 +8,7 @@
 
 import createLogger from './logger';
 
-const log = createLogger('scroll');
+// const log = createLogger('scroll');
 
 /** 滚动方向 */
 export type ScrollDirection = 'down' | 'up' | 'left' | 'right';
@@ -87,6 +87,7 @@ export interface ScrollUntilVisibleParams {
 export async function scrollUntilVisible(
     agent: any,
     params: ScrollUntilVisibleParams,
+    log: ReturnType<typeof createLogger>,
 ): Promise<void> {
     const {
         direction,
@@ -148,6 +149,7 @@ export async function scrollUntilVisible(
 export async function randomScroll(
     agent: any,
     params: RandomScrollParams,
+    log: ReturnType<typeof createLogger>,
 ): Promise<void> {
     const {
         direction,
